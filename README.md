@@ -151,7 +151,100 @@ The accelerator consists of 4 main notebooks built with PySpark and SQL:
 
 ---
 
-## 5. Validation Check Types & Rules
+## 5. Core PySpark Ingestion & Validation Logic
+
+The EDO Accelerator runs dynamic PySpark processing inside Microsoft Fabric Synapse Spark pools. Below are the key snippets showcasing the core logic of the data quality engine.
+
+### Ingestion & Dynamic Null Flagging
+In `Bronze to Silver.ipynb`, the engine scans all columns dynamically to assign a row-level null flag and fills missing values depending on their data type:
+
+```python
+# Create a null issue flag if any column in the row is null
+all_cols = silver_df.columns
+silver_df = silver_df.withColumn(
+    "null_issue_flag",
+    F.when(
+        F.greatest(*[F.col(c).isNull().cast("int") for c in all_cols]) == 1, 1
+    ).otherwise(0)
+)
+
+# Fill missing values dynamically based on column types
+fill_str = {c: "UNKNOWN" for c, t in silver_df.dtypes if t == "string"}
+fill_num = {c: 0.0 for c, t in silver_df.dtypes if t in ("double", "float", "int", "bigint", "long")}
+silver_df = silver_df.fillna(fill_str).fillna(fill_num)
+```
+
+### Dynamic Duplicate & Negative Value Detection
+The engine determines duplicates using the first column as the primary key and automatically scans all numeric columns for negative values:
+
+```python
+# Flag duplicate records based on the primary key (first column)
+first_col = all_cols[0]
+dup_counts = silver_df.groupBy(first_col).count().withColumnRenamed("count", "_dup_count")
+silver_df  = silver_df.join(dup_counts, on=first_col, how="left")
+silver_df  = silver_df.withColumn(
+    "duplicate_flag", F.when(F.col("_dup_count") > 1, 1).otherwise(0)
+).drop("_dup_count")
+
+# Scan all numeric columns to identify negative values
+numeric_cols = [c for c, t in silver_df.dtypes if t in ("double", "float", "int", "bigint", "long")
+                and c not in ("duplicate_flag", "null_issue_flag")]
+if numeric_cols:
+    neg_flags = [F.when(F.col(c) < 0, 1).otherwise(0) for c in numeric_cols]
+    silver_df = silver_df.withColumn(
+        "negative_value_flag",
+        F.when(F.greatest(*neg_flags) == 1, 1).otherwise(0)
+        if len(neg_flags) >= 2 else neg_flags[0]
+    )
+```
+
+### Dynamic Row Severity Scoring
+Row-level severities are scored based on the sum of all validation flags:
+
+```python
+flag_sum = (F.col("null_issue_flag") + F.col("duplicate_flag") +
+            F.col("negative_value_flag") + F.col("invalid_region_flag"))
+
+silver_df = silver_df.withColumn(
+    "row_severity",
+    F.when(flag_sum >= 3, "CRITICAL")
+     .when(flag_sum == 2, "HIGH")
+     .when(flag_sum == 1, "MEDIUM")
+     .otherwise("HEALTHY")
+)
+```
+
+### Rules Auto-Generation
+In `EDO_Validation_Engine.ipynb`, validation rules are dynamically compiled based on the Bronze table's column names and schemas:
+
+```python
+auto_rules = []
+rule_num = 1
+
+for col, dtype in zip(bronze_df.columns, bronze_df.dtypes):
+    # All columns get a null check
+    auto_rules.append({
+        "rule_id": f"R{rule_num:03d}",
+        "column_name": col,
+        "validation_type": "null_check",
+        "threshold": "0"
+    })
+    rule_num += 1
+    
+    # Numeric columns get a negative check
+    if dtype in ["int64", "float64"]:
+        auto_rules.append({
+            "rule_id": f"R{rule_num:03d}",
+            "column_name": col,
+            "validation_type": "negative_check",
+            "threshold": "0"
+        })
+        rule_num += 1
+```
+
+---
+
+## 6. Validation Check Types & Rules
 
 | Validation Type | What It Checks | Threshold Format | Example |
 | :--- | :--- | :--- | :--- |
@@ -163,7 +256,7 @@ The accelerator consists of 4 main notebooks built with PySpark and SQL:
 
 ---
 
-## 6. How to Onboard a New Dataset
+## 7. How to Onboard a New Dataset
 
 For a complete workspace setup, notebook import, and pipeline orchestration guide, refer to the step-by-step **[Fabric Deployment Guide](Fabric_Deployment_Guide.md)**.
 
@@ -180,7 +273,7 @@ To point the accelerator at a new dataset once the pipeline is configured:
 
 ---
 
-## 7. Project Directory Structure
+## 8. Project Directory Structure
 
 ```
 ├── EDO Accelerator/
@@ -210,7 +303,6 @@ To point the accelerator at a new dataset once the pipeline is configured:
 
 ---
 
-## 8. License
+## 9. License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
