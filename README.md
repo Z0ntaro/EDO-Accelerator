@@ -309,7 +309,42 @@ To point the accelerator at a new dataset once the pipeline is configured:
 │   └── LICENSE                                     # MIT License
 ```
 
+### 📄 Detailed File Catalog & Asset Descriptions
+
+#### 📓 Microsoft Fabric Spark Notebooks
+*   **`Register_Datasets.ipynb`**: Automatically scan the Lakehouse `Files` directory, filters for tabular files, and updates the `dataset_registry` table. Acts as the zero-code dataset onboarding gatekeeper.
+*   **`Bronze to Silver.ipynb`**: Ingests raw data into Bronze Delta tables, normalizes column headers, and appends row-level data quality flags (nulls, duplicates, negatives, invalid regions). Evaluates and writes rows with a computed `row_severity` classification (`HEALTHY`, `MEDIUM`, `HIGH`, `CRITICAL`) to Silver Delta tables.
+*   **`Silver to Gold.ipynb`**: Evaluates overall dataset run severities based on failure percentages, executes dynamic aggregations (averages and sums of metrics), groups KPIs by region or primary dimensions, and updates the central log table (`gold_observability_log`).
+*   **`EDO_Validation_Engine.ipynb`**: The core validation engine. Auto-compiles schema-derived rules, performs evaluations on columns, evaluates dataset health indexes, and writes detailed test metrics to `gold_observability_log`.
+
+#### 📊 Sample Datasets (Excel Templates)
+*   **`Customer_Master_Data.xlsx`**: Mock customer records (100 rows) containing fields like `customer_id`, `email`, and `annual_spend` to validate primary key constraints and null checks.
+*   **`Global_Climate_Records.xlsx`**: Weather telemetry logs (307 rows) with numeric temperature and CO2 values to test negative limits and date-time freshness parameters.
+*   **`Retail_Observability_Intelligence.xlsx`**: Operational checkout transactions (200 rows) used to validate allowed region codes and KPI aggregation functions.
+
+#### 📈 Power BI Visualizations
+*   **`EDO Observability Dashboard v2.pbix`**: Power BI Desktop template file linked to the Lakehouse SQL endpoint. Contains pre-configured schemas, DAX measures, and layouts.
+*   **`EDO Observability Dashboard v2.pdf`**: Direct PDF print of the dashboard, showing timeline charts, volatility indexes, and data health cards.
+
+#### 📁 Fabric Pipeline Definitions
+*   **`EDO_Observability_Pipeline/`**: Contains the JSON definition template and manifest metadata. When imported into Fabric, it orchestrates the loop execution of notebooks for all registered datasets.
+*   **`EDO_Observability_Pipeline_Activity runs.csv`**: Logging trace of historic runs containing pipeline execution durations, start times, and status metrics.
+
+#### 📝 Project Slide Decks & Guides (PPTX & Documentation)
+*   **`EDO_Accelerator_Deck.pptx`** (*Project Proposal & Business Presentation*): A professional business slide deck designed for management reviews. It explains:
+    *   The business challenges of silent data decay and pipeline failures.
+    *   Operational value, cost efficiency, and ROI of implementing EDO.
+    *   High-level medallion architecture and tech stack integrations.
+*   **`EDO_Accelerator_Walkthrough.pptx`** (*Product Walkthrough & Demo Guide*): A detailed step-by-step visual walkthrough. It contains screenshots and guidelines showing:
+    *   How pipelines look when executing in Microsoft Fabric.
+    *   How to configure and run the notebooks.
+    *   How the Power BI dashboard surfaces critical alert flags.
+*   **`EDO_Accelerator_Documentation.pdf`**: Complete technical guide detailing schema architectures, severity scoring formulas, and KQL validations.
+*   **`EDO_Accelerator_HowTo_Guide.docx`**: Operations handbook for workspace setup and deployment configurations.
+*   **`Fabric_Deployment_Guide.md`**: Handcrafted Markdown deployment guide listing setup steps.
+
 ---
+
 
 ## 🤝 9. Contributing & Open-Source Help Needed!
 
