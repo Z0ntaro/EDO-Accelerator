@@ -165,7 +165,9 @@ The accelerator consists of 4 main notebooks built with PySpark and SQL:
 
 ## 6. How to Onboard a New Dataset
 
-To point the accelerator at a new dataset, follow these simple configuration steps:
+For a complete workspace setup, notebook import, and pipeline orchestration guide, refer to the step-by-step **[Fabric Deployment Guide](Fabric_Deployment_Guide.md)**.
+
+To point the accelerator at a new dataset once the pipeline is configured:
 
 1.  **Upload the file**: Copy the Excel or CSV dataset to the Fabric Lakehouse `Files` folder.
 2.  **Run Registry**: Run `Register_Datasets.ipynb` (or execute the Fabric Data Pipeline) to register the file.
@@ -201,6 +203,7 @@ To point the accelerator at a new dataset, follow these simple configuration ste
 │   ├── EDO_Observability_Pipeline_Activity runs.csv # Sample pipeline activity history
 │   ├── Screenshot 2026-07-01 171657.png            # Dashboard UI Screenshot 1
 │   ├── Screenshot 2026-07-01 171827.png            # Pipeline Run Screenshot 2
+│   ├── Fabric_Deployment_Guide.md                  # Detailed step-by-step deployment guide
 │   ├── .gitignore                                  # Git exclusion configuration
 │   └── LICENSE                                     # MIT License
 ```
