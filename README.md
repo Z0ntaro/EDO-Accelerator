@@ -201,5 +201,13 @@ To point the accelerator at a new dataset, follow these simple configuration ste
 │   ├── EDO_Observability_Pipeline_Activity runs.csv # Sample pipeline activity history
 │   ├── Screenshot 2026-07-01 171657.png            # Dashboard UI Screenshot 1
 │   ├── Screenshot 2026-07-01 171827.png            # Pipeline Run Screenshot 2
-│   └── .gitignore                                  # Git exclusion configuration
+│   ├── .gitignore                                  # Git exclusion configuration
+│   └── LICENSE                                     # MIT License
 ```
+
+---
+
+## 8. License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
