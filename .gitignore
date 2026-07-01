@@ -1,0 +1,12 @@
+# Office Temp Files
+~$*.xlsx
+~$*.docx
+~$*.pptx
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# OS Files
+Thumbs.db
+Desktop.ini
