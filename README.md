@@ -1,4 +1,12 @@
-# Enterprise Data Observability (EDO) Accelerator
+# 🔍 Enterprise Data Observability (EDO) Accelerator
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/Z0ntaro/EDO-Accelerator?style=social" alt="GitHub Stars"/>
+  <img src="https://img.shields.io/github/forks/Z0ntaro/EDO-Accelerator?style=social" alt="GitHub Forks"/>
+  <img src="https://img.shields.io/github/issues/Z0ntaro/EDO-Accelerator" alt="GitHub Issues"/>
+  <img src="https://img.shields.io/github/license/Z0ntaro/EDO-Accelerator" alt="License"/>
+</p>
+
 
 [![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)](https://azure.microsoft.com/en-us/products/microsoft-fabric/)
 [![PySpark](https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)](https://spark.apache.org/)
@@ -11,7 +19,7 @@ Designed and developed by **Arghyadeep Paul** (*Associate Technical Consultant �
 
 ---
 
-## 1. What This Accelerator Does
+## 🛠️ 1. What This Accelerator Does
 
 The EDO Accelerator is designed to solve data quality decay and observability blindspots in enterprise pipelines. By decoupling the validation engine from the data structure, the engine is **universal by design**: the validation logic, severity scoring, and Gold layer logs remain static, while only the dataset registry and rule configurations change per deployment.
 
@@ -25,7 +33,7 @@ The EDO Accelerator is designed to solve data quality decay and observability bl
 
 ---
 
-## 2. Medallion Observability Architecture
+## 🏗️ 2. Medallion Observability Architecture
 
 The accelerator follows a Medallion architecture optimized for pipeline observability:
 
@@ -76,7 +84,7 @@ graph TD
 
 ---
 
-## 3. Microsoft Fabric Pipeline Orchestration
+## ⚙️ 3. Microsoft Fabric Pipeline Orchestration
 
 The EDO Accelerator is fully orchestrated using a Microsoft Fabric Data Pipeline. The pipeline enables automated, end-to-end execution across multiple datasets:
 
@@ -106,7 +114,7 @@ sequenceDiagram
 
 ---
 
-## 4. Notebook Components
+## 📓 4. Notebook Components
 
 The accelerator consists of 4 main notebooks built with PySpark and SQL:
 
@@ -151,7 +159,7 @@ The accelerator consists of 4 main notebooks built with PySpark and SQL:
 
 ---
 
-## 5. Core PySpark Ingestion & Validation Logic
+## 💻 5. Core PySpark Ingestion & Validation Logic
 
 The EDO Accelerator runs dynamic PySpark processing inside Microsoft Fabric Synapse Spark pools. Below are the key snippets showcasing the core logic of the data quality engine.
 
@@ -244,7 +252,7 @@ for col, dtype in zip(bronze_df.columns, bronze_df.dtypes):
 
 ---
 
-## 6. Validation Check Types & Rules
+## 📊 6. Validation Check Types & Rules
 
 | Validation Type | What It Checks | Threshold Format | Example |
 | :--- | :--- | :--- | :--- |
@@ -256,7 +264,7 @@ for col, dtype in zip(bronze_df.columns, bronze_df.dtypes):
 
 ---
 
-## 7. How to Onboard a New Dataset
+## 🚀 7. How to Onboard a New Dataset
 
 For a complete workspace setup, notebook import, and pipeline orchestration guide, refer to the step-by-step **[Fabric Deployment Guide](Fabric_Deployment_Guide.md)**.
 
@@ -273,7 +281,7 @@ To point the accelerator at a new dataset once the pipeline is configured:
 
 ---
 
-## 8. Project Directory Structure
+## 📂 8. Project Directory Structure
 
 ```
 ├── EDO Accelerator/
@@ -303,6 +311,22 @@ To point the accelerator at a new dataset once the pipeline is configured:
 
 ---
 
-## 9. License
+## 🤝 9. Contributing & Open-Source Help Needed!
+
+This accelerator is open-source and ready for production, but we are looking for contributions to add support for even more enterprise scenarios!
+
+### 💡 Up-For-Grabs Features:
+*   [ ] **Webhook Alerts**: Design notebook extensions that send immediate Teams or Slack notifications when the pipeline severity rises to `CRITICAL`.
+*   [ ] **SQL/DW Sources**: Extend `Register_Datasets.ipynb` to dynamically onboard Azure SQL Databases and Fabric Data Warehouses as ingestion sources (instead of Excel only).
+*   [ ] **Anomaly Scoring Models**: Add dynamic machine learning anomaly detection notebooks to automatically score data deviations in the Silver layer.
+
+**How to contribute**:
+1. Fork the repo and clone locally.
+2. Implement your features, test them against your Fabric capacity, and update the directory structure.
+3. Open a Pull Request detailing your enhancements!
+
+---
+
+## 📄 10. License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
